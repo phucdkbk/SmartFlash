@@ -1,8 +1,17 @@
 package com.alandk.smartflash.activity;
 
+import java.util.Calendar;
+import java.util.Timer;
+
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
@@ -11,26 +20,48 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
-import com.alandk.smartflash.R;
+import android.widget.Toast;
+
 
 public class MainActivity extends Activity {
 
     ImageButton btnSwitch;
+    Button buttonScreenlight;
 
     private Camera camera;
     private boolean isFlashOn;
     private boolean hasFlash;
     Parameters params;
     MediaPlayer mp;
+    
+    
+    PendingIntent pi;
+	BroadcastReceiver br;
+	AlarmManager am;
+    
 
-    @Override
+    public boolean isFlashOn() {
+		return isFlashOn;
+	}
+
+	public void setFlashOn(boolean isFlashOn) {
+		this.isFlashOn = isFlashOn;
+	}
+
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         // flash switch button
         btnSwitch = (ImageButton) findViewById(R.id.btnSwitch);
+        buttonScreenlight = (Button) findViewById(R.id.buttonScreenLight);
 
         /*
          * First check if device is supporting flashlight or not
@@ -67,7 +98,7 @@ public class MainActivity extends Activity {
         btnSwitch.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {            
                 if (isFlashOn) {
                     // turn off flash
                     turnOffFlash();
@@ -77,7 +108,59 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        
+        buttonScreenlight.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				showScreenLight();
+				
+				
+			}
+		});
+        
+        
+        
+//        Timer timer = new Timer();
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.SECOND, 10);
+//        timer.scheduleAtFixedRate(new ScheduleRepeat(this), cal.getTime() , 2000);
+        
+        setup();
+		//am.setRepeating(type, triggerAtMillis, intervalMillis, operation);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pi);
     }
+	
+	
+	private void showScreenLight(){
+		Intent intent = new Intent(this, ScreenLightActivity.class);
+		startActivityForResult(intent, 0);
+	}
+	
+	public void turnOnOffFlash(){
+		 if (isFlashOn) {
+             // turn off flash
+             turnOffFlash();
+         } else {
+             // turn on flash
+             turnOnFlash();
+         }
+	}
+	
+	private void setup() {
+		br = new BroadcastReceiver() {
+            @Override
+			public void onReceive(Context c, Intent i) {
+				Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
+				turnOnOffFlash();
+			}
+        };
+		registerReceiver(br, new IntentFilter("com.authorwjf.wakeywakey") );
+        pi = PendingIntent.getBroadcast( this, 0, new Intent("com.authorwjf.wakeywakey"), 0 );
+        am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+	}
 
     /*
      * Get the camera
@@ -96,7 +179,7 @@ public class MainActivity extends Activity {
     /*
      * Turning On flash
      */
-    private void turnOnFlash() {
+    public void turnOnFlash() {
         if (!isFlashOn) {
             if (camera == null || params == null) {
                 return;
@@ -119,7 +202,7 @@ public class MainActivity extends Activity {
     /*
      * Turning Off flash
      */
-    private void turnOffFlash() {
+    public void turnOffFlash() {
         if (isFlashOn) {
             if (camera == null || params == null) {
                 return;

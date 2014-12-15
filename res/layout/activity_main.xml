@@ -15,6 +15,8 @@
         android:background="@null"
         android:contentDescription="@null"
     />
+    
+   	
 
 <!--    <TextView android:text="Developed by Ravi Tamada\nThanks to @keithsereby for providing the design\nFor tutorial visit www.androidhive.info"
               android:layout_width="fill_parent"
@@ -26,5 +28,14 @@
               android:textSize="13dip"
               android:textColor="#3b3b3b"
               android:layout_marginBottom="15dip"/>-->
+
+    <Button
+        android:id="@+id/buttonScreenLight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSwitch"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="@string/button_screen_light" />
 
 </RelativeLayout>

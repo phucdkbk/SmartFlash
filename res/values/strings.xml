@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">SmartFlash</string>
     <string name="menu_settings">Settings</string>    
+    
+    <string name="button_screen_light">Screen light</string>
 </resources>
