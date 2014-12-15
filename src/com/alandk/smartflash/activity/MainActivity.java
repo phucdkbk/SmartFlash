@@ -25,7 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
+import com.alandk.smartflash.common.ColorPicker;
 
 public class MainActivity extends Activity {
 
@@ -37,31 +37,31 @@ public class MainActivity extends Activity {
     private boolean hasFlash;
     Parameters params;
     MediaPlayer mp;
-    
-    
+    private ColorPicker colorPicker;
+
     PendingIntent pi;
-	BroadcastReceiver br;
-	AlarmManager am;
-    
+    BroadcastReceiver br;
+    AlarmManager am;
 
     public boolean isFlashOn() {
-		return isFlashOn;
-	}
+        return isFlashOn;
+    }
 
-	public void setFlashOn(boolean isFlashOn) {
-		this.isFlashOn = isFlashOn;
-	}
+    public void setFlashOn(boolean isFlashOn) {
+        this.isFlashOn = isFlashOn;
+    }
 
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.act_picker);
 
         // flash switch button
         btnSwitch = (ImageButton) findViewById(R.id.btnSwitch);
         buttonScreenlight = (Button) findViewById(R.id.buttonScreenLight);
+        //colorPicker = (ColorPicker) findViewById(R.id.colorPicker);
 
         /*
          * First check if device is supporting flashlight or not
@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
         if (!hasFlash) {
-			// device doesn't support flash
+            // device doesn't support flash
             // Show alert message and close the application
             AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
                     .create();
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
         btnSwitch.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {            
+            public void onClick(View v) {
                 if (isFlashOn) {
                     // turn off flash
                     turnOffFlash();
@@ -108,59 +108,58 @@ public class MainActivity extends Activity {
                 }
             }
         });
-        
+
         buttonScreenlight.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
-				showScreenLight();
-				
-				
-			}
-		});
-        
-        
-        
+                //showScreenLight();
+                showColorPicker();
+
+            }
+        });
+
 //        Timer timer = new Timer();
 //        Calendar cal = Calendar.getInstance();
 //        cal.add(Calendar.SECOND, 10);
 //        timer.scheduleAtFixedRate(new ScheduleRepeat(this), cal.getTime() , 2000);
-        
         setup();
-		//am.setRepeating(type, triggerAtMillis, intervalMillis, operation);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pi);
+        //am.setRepeating(type, triggerAtMillis, intervalMillis, operation);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pi);
     }
-	
-	
-	private void showScreenLight(){
-		Intent intent = new Intent(this, ScreenLightActivity.class);
-		startActivityForResult(intent, 0);
-	}
-	
-	public void turnOnOffFlash(){
-		 if (isFlashOn) {
-             // turn off flash
-             turnOffFlash();
-         } else {
-             // turn on flash
-             turnOnFlash();
-         }
-	}
-	
-	private void setup() {
-		br = new BroadcastReceiver() {
+
+    private void showScreenLight() {
+        Intent intent = new Intent(this, ScreenLightActivity.class);
+        startActivityForResult(intent, 0);
+    }
+    
+    private void showColorPicker() {
+        Intent intent = new Intent(this, ColorPickerActivity.class);
+        startActivityForResult(intent, 0);
+    }
+
+    public void turnOnOffFlash() {
+        if (isFlashOn) {
+            // turn off flash
+            turnOffFlash();
+        } else {
+            // turn on flash
+            turnOnFlash();
+        }
+    }
+
+    private void setup() {
+        br = new BroadcastReceiver() {
             @Override
-			public void onReceive(Context c, Intent i) {
-				Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
-				turnOnOffFlash();
-			}
+            public void onReceive(Context c, Intent i) {
+                Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
+                turnOnOffFlash();
+            }
         };
-		registerReceiver(br, new IntentFilter("com.authorwjf.wakeywakey") );
-        pi = PendingIntent.getBroadcast( this, 0, new Intent("com.authorwjf.wakeywakey"), 0 );
-        am = (AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
-	}
+        registerReceiver(br, new IntentFilter("com.authorwjf.wakeywakey"));
+        pi = PendingIntent.getBroadcast(this, 0, new Intent("com.authorwjf.wakeywakey"), 0);
+        am = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
+    }
 
     /*
      * Get the camera
@@ -185,16 +184,15 @@ public class MainActivity extends Activity {
                 return;
             }
             // play sound
-            playSound();
+            //playSound();
 
-            params = camera.getParameters();
-            params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(params);
-            camera.startPreview();
-            isFlashOn = true;
-
+//            params = camera.getParameters();
+//            params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+//            camera.setParameters(params);
+//            camera.startPreview();
+//            isFlashOn = true;
             // changing button/switch image
-            toggleButtonImage();
+            //toggleButtonImage();
         }
 
     }

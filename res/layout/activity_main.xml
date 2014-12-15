@@ -14,20 +14,26 @@
         android:src="@drawable/btn_switch_on"
         android:background="@null"
         android:contentDescription="@null"
-    />
-    
-   	
+    />    
 
-<!--    <TextView android:text="Developed by Ravi Tamada\nThanks to @keithsereby for providing the design\nFor tutorial visit www.androidhive.info"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true"
-              android:layout_centerHorizontal="true"
-              android:gravity="center"
-              android:padding="15dip"
-              android:textSize="13dip"
-              android:textColor="#3b3b3b"
-              android:layout_marginBottom="15dip"/>-->
+    <com.alandk.smartflash.common.ColorPicker
+        android:id="@+id/colorPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.8" />
+
+
+    <!--    <TextView android:text="Developed by Ravi Tamada\nThanks to @keithsereby for providing the design\nFor tutorial visit www.androidhive.info"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:padding="15dip"
+    android:textSize="13dip"
+    android:textColor="#3b3b3b"
+    android:layout_marginBottom="15dip"/>-->
 
     <Button
         android:id="@+id/buttonScreenLight"

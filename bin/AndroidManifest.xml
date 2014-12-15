@@ -25,5 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.alandk.smartflash.activity.ScreenLightActivity"></activity>
+        <activity android:name="com.alandk.smartflash.activity.ColorPickerActivity"></activity>
+        
     </application>
 </manifest>
