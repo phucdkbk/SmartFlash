@@ -7,7 +7,7 @@
 # view AndroidManifest.xml #generated:27
 -keep class com.alandk.smartflash.activity.ScreenLightActivity { <init>(...); }
 
-# view res/layout/act_picker.xml #generated:6
-# view res/layout/activity_main.xml #generated:18
+# view res/layout/act_picker.xml #generated:22
+# view res/layout/activity_main.xml #generated:19
 -keep class com.alandk.smartflash.common.ColorPicker { <init>(...); }
 

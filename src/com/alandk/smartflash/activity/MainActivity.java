@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
         // flash switch button
         btnSwitch = (ImageButton) findViewById(R.id.btnSwitch);
         buttonScreenlight = (Button) findViewById(R.id.buttonScreenLight);
-        //colorPicker = (ColorPicker) findViewById(R.id.colorPicker);
+        colorPicker = (ColorPicker) findViewById(R.id.colorPicker);
 
         /*
          * First check if device is supporting flashlight or not
@@ -112,31 +112,24 @@ public class MainActivity extends Activity {
         buttonScreenlight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-				// TODO Auto-generated method stub
-                //showScreenLight();
-                showColorPicker();
+                // TODO Auto-generated method stub
+                showScreenLight();
+                //showColorPicker();
 
             }
         });
 
-//        Timer timer = new Timer();
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.SECOND, 10);
-//        timer.scheduleAtFixedRate(new ScheduleRepeat(this), cal.getTime() , 2000);
-        setup();
-        //am.setRepeating(type, triggerAtMillis, intervalMillis, operation);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, pi);
+        setup();        
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 2000, pi);
     }
 
     private void showScreenLight() {
         Intent intent = new Intent(this, ScreenLightActivity.class);
-        startActivityForResult(intent, 0);
-    }
-    
-    private void showColorPicker() {
-        Intent intent = new Intent(this, ColorPickerActivity.class);
-        startActivityForResult(intent, 0);
-    }
+        Bundle bundle = new Bundle();
+        bundle.putInt("color", colorPicker.getColor());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }    
 
     public void turnOnOffFlash() {
         if (isFlashOn) {
@@ -152,7 +145,7 @@ public class MainActivity extends Activity {
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-                Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(c, "Rise and Shine!", Toast.LENGTH_LONG).show();
                 turnOnOffFlash();
             }
         };
@@ -186,13 +179,13 @@ public class MainActivity extends Activity {
             // play sound
             //playSound();
 
-//            params = camera.getParameters();
-//            params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-//            camera.setParameters(params);
-//            camera.startPreview();
-//            isFlashOn = true;
+            params = camera.getParameters();
+            params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+            camera.setParameters(params);
+            camera.startPreview();
+            isFlashOn = true;
             // changing button/switch image
-            //toggleButtonImage();
+            toggleButtonImage();
         }
 
     }
@@ -206,7 +199,7 @@ public class MainActivity extends Activity {
                 return;
             }
             // play sound
-            playSound();
+            //playSound();
 
             params = camera.getParameters();
             params.setFlashMode(Parameters.FLASH_MODE_OFF);
@@ -255,6 +248,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        am.cancel(pi);        
+        unregisterReceiver(br);
     }
 
     @Override
